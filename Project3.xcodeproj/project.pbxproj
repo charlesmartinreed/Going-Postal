@@ -12,6 +12,7 @@
 		8C9E8F20213F090F0069A068 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C9E8F1E213F090F0069A068 /* Main.storyboard */; };
 		8C9E8F22213F09110069A068 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8C9E8F21213F09110069A068 /* Assets.xcassets */; };
 		8C9E8F25213F09110069A068 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C9E8F23213F09110069A068 /* LaunchScreen.storyboard */; };
+		8C9E8F2D213F092A0069A068 /* FontsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9E8F2C213F092A0069A068 /* FontsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		8C9E8F21213F09110069A068 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8C9E8F24213F09110069A068 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8C9E8F26213F09110069A068 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8C9E8F2C213F092A0069A068 /* FontsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 			children = (
 				8C9E8F1A213F090E0069A068 /* AppDelegate.swift */,
 				8C9E8F1C213F090F0069A068 /* ViewController.swift */,
+				8C9E8F2C213F092A0069A068 /* FontsViewController.swift */,
 				8C9E8F1E213F090F0069A068 /* Main.storyboard */,
 				8C9E8F21213F09110069A068 /* Assets.xcassets */,
 				8C9E8F23213F09110069A068 /* LaunchScreen.storyboard */,
@@ -136,6 +139,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8C9E8F1D213F090F0069A068 /* ViewController.swift in Sources */,
+				8C9E8F2D213F092A0069A068 /* FontsViewController.swift in Sources */,
 				8C9E8F1B213F090E0069A068 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
