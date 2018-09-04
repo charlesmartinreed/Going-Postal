@@ -9,13 +9,15 @@
 import UIKit
 import MobileCoreServices
 
-class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDragDelegate, UIDropInteractionDelegate {
+class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDragDelegate, UIDropInteractionDelegate, UIDragInteractionDelegate {
+    
     
 
     //MARK:- Project goals
     //the user should be able to drag colors onto text to change the color
     //the user should be able to change fonts by dragging from the font selection table view
     //the user should be able to drag an image into the postcard imageview to set the image displayed
+    //the user should be able to drag the postcard context out into other apps
     
     //MARK:- @IBOutlets
     @IBOutlet weak var postcard: UIImageView!
@@ -38,6 +40,10 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "Edit Postcard"
+        //coloring the dividing line between our view controllers
+        splitViewController?.view.backgroundColor = UIColor.lightGray
+        
         //setting the drag delegate property
         colorSelection.dragDelegate = self
         
@@ -46,6 +52,9 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         let dropInteraction = UIDropInteraction(delegate: self)
         postcard.addInteraction(dropInteraction)
         
+        //configuring the postcard to allow dragging the image outside of our app
+        let dragInteraction = UIDragInteraction(delegate: self)
+        postcard.addInteraction(dragInteraction)
         //we'll first fill our colors array with standard system color and then use a for loop to fill it with additional hues and saturations
         colors += [.black, .gray, .white, .orange, .red, .magenta, .purple, .blue, .cyan, .green]
         
@@ -118,7 +127,12 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             }
             
         } else if session.hasItemsConforming(toTypeIdentifiers: [kUTTypeImage as String]) {
-            //handle images
+            //pull out UIImage, assign it to our image property and then call the renderPostcard method
+            session.loadObjects(ofClass: UIImage.self) { (items) in
+                guard let draggedImage = items.first as? UIImage else { return }
+                self.image = draggedImage
+                self.renderPostcard()
+            }
             
         } else {
             //load the objects, which converts the dragged items to the type
@@ -137,6 +151,18 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             }
         }
     }
+    
+    func dragInteraction(_ interaction: UIDragInteraction, itemsForBeginning session: UIDragSession) -> [UIDragItem] {
+        //pull out current postcard image as an image view
+        //wrap it in an NSItemProvider and UIDragItem
+        guard let image = postcard.image else { return [] }
+        let itemProvider = NSItemProvider(object: image)
+        let item = UIDragItem(itemProvider: itemProvider)
+       
+        return [item]
+    }
+    
+    
     
     
     //MARK:- Function for drawing our postcard
