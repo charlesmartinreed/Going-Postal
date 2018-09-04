@@ -22,9 +22,13 @@
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HLf-tJ-l5i">
                                 <rect key="frame" x="16" y="228.5" width="343" height="274"/>
+                                <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="HLf-tJ-l5i" secondAttribute="height" multiplier="1:0.8" id="DlV-0b-srt"/>
                                 </constraints>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="LvH-ny-wOl" appends="YES" id="SUu-F0-WtW"/>
+                                </connections>
                             </imageView>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="z3V-3p-hML">
                                 <rect key="frame" x="0.0" y="607" width="375" height="50"/>
@@ -74,6 +78,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8gk-VA-FzG" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="LvH-ny-wOl">
+                    <connections>
+                        <action selector="changeText:" destination="Wgf-IQ-Yc0" id="QNV-GM-xJ1"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1180" y="602.24887556221893"/>
         </scene>

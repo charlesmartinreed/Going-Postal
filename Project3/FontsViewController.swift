@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import MobileCoreServices
 
-class FontsViewController: UITableViewController {
+class FontsViewController: UITableViewController, UITableViewDragDelegate {
     
     //MARK:- Properties
     // an array of system fonts for the user to choose from, sorted
@@ -17,7 +18,7 @@ class FontsViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
+        tableView.dragDelegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -38,4 +39,19 @@ class FontsViewController: UITableViewController {
         
         return cell
     }
+    
+    //MARK:- Table View drag delegate method
+    func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        //item - NSItemProvider - Drag Item
+        //remember to import MobileCoreServices for the 
+        
+        //must convert string to a data item and then to a NSData item
+        let string = fonts[indexPath.row]
+        guard let data = string.data(using: .utf8) else { return [] } //decline drag/drop
+        
+        let itemProvider = NSItemProvider(item: data as NSData, typeIdentifier: kUTTypePlainText as String)
+        
+        return [UIDragItem(itemProvider: itemProvider)]
+    }
+    
 }

@@ -105,7 +105,17 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         
         //type identifiers are defined by Mobile Core Services
         if session.hasItemsConforming(toTypeIdentifiers: [kUTTypePlainText as String]) {
-            //handle strings
+            session.loadObjects(ofClass: NSString.self) { items in
+                guard let string = items.first as? String else { return }
+                
+                if location.y < self.postcard.bounds.midY {
+                    self.topFontName = string
+                } else {
+                    self.bottomFontName = string
+                }
+                
+                self.renderPostcard()
+            }
             
         } else if session.hasItemsConforming(toTypeIdentifiers: [kUTTypeImage as String]) {
             //handle images
@@ -166,6 +176,55 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
             bottomText.draw(in: bottomTextRect, withAttributes: bottomTextAttributes)
         })
     }
-
+    
+    //MARK:- Tap Gesture recognition
+    //allows the user to change the text in the postcard by tapping it
+    
+    @IBAction func changeText(_ sender: UITapGestureRecognizer) {
+        //find the location of the tap
+        let location = sender.location(in: postcard)
+        
+        //decide whether the user wants to edit the top or bottom label
+        let changeTop: Bool
+        if location.y < postcard.bounds.midY {
+            changeTop = true
+        } else {
+            changeTop = false
+        }
+        
+        // create an alert controller with a text field
+        let ac = UIAlertController(title: "Change text", message: nil, preferredStyle: .alert)
+        ac.addTextField { (textfield) in
+            textfield.placeholder = "Write what you'd like to say"
+            
+            if changeTop {
+                textfield.text = self.topText
+            } else {
+                textfield.text = self.bottomText
+            }
+        }
+        
+        //add a change button that updates the correct property
+        ac.addAction(UIAlertAction(title: "Change", style: .default, handler: { (_) in
+            guard let text = ac.textFields?[0].text else { return }
+            
+            if changeTop {
+                self.topText = text
+            } else {
+                self.bottomText = text
+            }
+            
+            self.renderPostcard()
+        }))
+        
+        
+        //add a cancel button too
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        // present the alert
+        present(ac, animated: true, completion: nil)
+        
+    }
+    
 }
 

@@ -15,7 +15,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        //give the user the ability to access the fonts in portrait mode
+        
+        //start by casting the root view controller as a split view controller and setting its display mode attribute to .allVisible
+        if let split = window?.rootViewController as? UISplitViewController {
+            
+            split.preferredDisplayMode = .allVisible
+            
+            //find the righthand view controller by looking at the last view controller in our split view and casting it as a Navigation controller
+            if let nc = split.viewControllers.last as? UINavigationController {
+                
+                //add the button to control our split's display mode to the left corner of nav controller
+                nc.topViewController?.navigationItem.leftBarButtonItem = split.displayModeButtonItem
+            }
+        }
+        
+        
         return true
     }
 
