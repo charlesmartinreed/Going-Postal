@@ -7,9 +7,15 @@
 //
 
 import UIKit
+import MobileCoreServices
 
-class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
-  
+class ViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDragDelegate, UIDropInteractionDelegate {
+    
+
+    //MARK:- Project goals
+    //the user should be able to drag colors onto text to change the color
+    //the user should be able to change fonts by dragging from the font selection table view
+    //the user should be able to drag an image into the postcard imageview to set the image displayed
     
     //MARK:- @IBOutlets
     @IBOutlet weak var postcard: UIImageView!
@@ -31,6 +37,14 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //setting the drag delegate property
+        colorSelection.dragDelegate = self
+        
+        //enable user interaction on the image view and configuring it to handle drops
+        postcard.isUserInteractionEnabled = true
+        let dropInteraction = UIDropInteraction(delegate: self)
+        postcard.addInteraction(dropInteraction)
         
         //we'll first fill our colors array with standard system color and then use a for loop to fill it with additional hues and saturations
         colors += [.black, .gray, .white, .orange, .red, .magenta, .purple, .blue, .cyan, .green]
@@ -65,6 +79,55 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         
         return cell
     }
+    
+    //MARK:- Collection view drag and drop delegate methods
+    func collectionView(_ collectionView: UICollectionView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+        //a drag item contains a NSItemProvider which in turn contains the item you want to drag
+        let color = colors[indexPath.item]
+        let provider = NSItemProvider(object: color)
+        let item = UIDragItem(itemProvider: provider)
+        
+        return [item]
+    }
+    
+    func dropInteraction(_ interaction: UIDropInteraction, sessionDidUpdate session: UIDropSession) -> UIDropProposal {
+        //return a drop proposal to tell system whether data will be moved or copied
+        //we're using only copy
+        return UIDropProposal(operation: .copy)
+    }
+    
+    func dropInteraction(_ interaction: UIDropInteraction, performDrop session: UIDropSession) {
+        //we have the data and now we need to use it
+        //need to know what type of data was dropped; color, string or image
+        //start by looking for drop sessions in the post card area
+        
+        let location = session.location(in: postcard)
+        
+        //type identifiers are defined by Mobile Core Services
+        if session.hasItemsConforming(toTypeIdentifiers: [kUTTypePlainText as String]) {
+            //handle strings
+            
+        } else if session.hasItemsConforming(toTypeIdentifiers: [kUTTypeImage as String]) {
+            //handle images
+            
+        } else {
+            //load the objects, which converts the dragged items to the type
+            session.loadObjects(ofClass: UIColor.self) { items in
+                //we have to typecast this ourselves, doesn't happen automagically
+                guard let color = items.first as? UIColor else { return }
+                
+                //did the user want to change the color of the top text or bottom text
+                if location.y < self.postcard.bounds.midY {
+                    self.topColor = color
+                } else {
+                    self.bottomColor = color
+                }
+                
+                self.renderPostcard()
+            }
+        }
+    }
+    
     
     //MARK:- Function for drawing our postcard
     func renderPostcard() {
